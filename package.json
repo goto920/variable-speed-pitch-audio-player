@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "homepage": ".",
-  "subversion": "20210221-00",
+  "subversion": "20210711-00",
   "dependencies": {
     "audiobuffer-to-wav": "^1.0.0",
     "file-saver": "^2.0.5",

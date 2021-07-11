@@ -132,7 +132,8 @@ class App extends Component {
       1) {m.input}: <br />
         <span className="selectFile">
         <input type="file" name="loadFile"
-        accept="audio/*" onChange={loadFile} /><br />
+        accept="audio/*,.wav,.mp3,.aac,.m4a,.opus" 
+        onChange={loadFile} /><br />
         </span>
       <hr />
 
