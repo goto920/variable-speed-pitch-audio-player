@@ -3,31 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "homepage": ".",
-  "subversion": "20210711-00",
+  "subversion": "20261103-legacy",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "npm run build && gh-pages -d dist"
+  },
   "dependencies": {
     "audiobuffer-to-wav": "^1.0.0",
     "file-saver": "^2.0.5",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "react-scripts": "^1.1.5",
-    "soundtouchjs": "^0.1.26",
-    "whatwg-fetch": "^3.6.1"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "soundtouchjs": "^0.1.26"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": [ "defaults" ],
   "devDependencies": {
-    "browser-resolve": "^2.0.0",
-    "esmify": "^2.1.1"
+    "@vitejs/plugin-react": "^4.2.0",
+    "gh-pages": "^6.3.0",
+    "vite": "^5.0.0"
   }
 }

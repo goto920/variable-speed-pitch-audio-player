@@ -1,3 +1,136 @@
+-e 
+
+--- START OF FILE package.json ---
+
+{
+  "name": "variablespeedplayer",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": ".",
+  "subversion": "20210711-00",
+  "dependencies": {
+    "audiobuffer-to-wav": "^1.0.0",
+    "file-saver": "^2.0.5",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "react-scripts": "^1.1.5",
+    "soundtouchjs": "^0.1.26",
+    "whatwg-fetch": "^3.6.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": [ "defaults" ],
+  "devDependencies": {
+    "browser-resolve": "^2.0.0",
+    "esmify": "^2.1.1"
+  }
+}
+-e 
+
+--- START OF FILE README.md ---
+
+# KG's variable pitch/speed player
+
+Written in: JavaScript, Node.js, React, Web Audio API
+
+Runs on Windows/macOS/Linux/Android/iOS
+
+Based on [SoundTouchJS](https://github.com/cutterbl/SoundTouchJS)
+
+## User guide/executable url:  [English](https://goto920.github.io/demos/variableplayer/)   [日本語](https://goto920.github.io/demos/variableplayer/index-jp.html)
+
+## Feature
+
+- Same program (just 700kB) works on various devices.
+- No installation required. Runs offline.
+- Slow down playback (25% to 200%) for drummer, guitarist, pianist, vocalist
+- Fine pitch adjustment (semi-tone.cents) for vocalist, guitarist, pianist
+- Local downloading of modified sound as a wav file
+
+Note: Upon download on iOS 12 browser will open blob window with "unknown" and users should save the file as filename.wav. iOS 13 may not have the problem.
+Sound quality is not very good for big change in speed or pitch. 
+
+Download begins after playback because soundtouchJS does not work with OfflineAudioContext so far.
+
+![ScreenShot](https://goto920.github.io/demos/variableplayer/player-eng.png)
+-e 
+
+--- START OF FILE public/index.html ---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="theme-color" content="#000000" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>Variable speed/pitch audio player</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
+  </body>
+</html>
+-e 
+
+--- START OF FILE public/manifest.json ---
+
+{
+  "short_name": "Speed/Pitch Player",
+  "name": "Speed/Pitch Player",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
+-e 
+
+--- START OF FILE src/App.js ---
+
 import React, { Component } from 'react';
 // import logo from './logo.svg';
 import './App.css';
@@ -704,3 +837,307 @@ class App extends Component {
 } // end class
 
 export default App;
+-e 
+
+--- START OF FILE src/index.css ---
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+-e 
+
+--- START OF FILE src/App.css ---
+
+.App {
+  text-align: left;
+  max-width: 375px;
+  margin: 0 auto;
+  padding: 30px;
+  cursor: pointer;
+}
+
+.selectFile input {
+  background: #C94D46;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.slider input {
+    width: 80%;
+/*  width: 60%; */
+  margin: auto;
+  cursor: pointer;
+}
+.shortSlider input {
+  width: 60%;
+  margin: auto;
+  cursor: pointer;
+}
+
+.addClicks button {
+  background: #C94D46;
+  padding: 8px;
+  border: 1px solid #832420;
+  border-radius: 2px;
+  width: 80px;
+/*  width: 60px; */
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.tinyButton button {
+  cursor: pointer;
+  height: 25px;
+  width: 25px;
+  margin: 0 auto;
+  text-align: center;
+  line-height: 10px;
+  border-radius: 5px;
+  font-size: 20px;
+  background: #00ffff;
+  padding: 5px 5px;
+  color: #000000;
+}
+
+.small-button button {
+  background: #0000ff;
+  padding: 8px;
+  border: 1px solid #832420;
+  border-radius: 2px;
+  width: 60px;
+  color: #fff;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.selector select {
+  cursor: pointer;
+}
+-e 
+
+--- START OF FILE src/language.json ---
+
+{"us": {
+   "title": "KG's variable speed/pitch player",
+   "input": "Select audio file (local/cloud storage)",
+   "speed": "Speed(%)",
+   "reset": "Reset",
+   "pitch": "Pitch(semitone.cents)",
+   "time": "Time(sec)",
+   "timeNote": "(Start pos., A, B set)",
+   "setA": "setA",
+   "setB": "setB",
+   "resetAB": "ResetAB",
+   "volume" : "Volume(%)",
+   "volumeNote" : "(May change during export)",
+   "loadFile": "selectFile!",
+   "playOnce": "PlayOnce",
+   "pause": "Pause",
+   "rewind": "Rewind",
+   "loopAB": "loopAB",
+   "stopLoop": "StopLoop",
+   "interval": "interval(sec)",
+   "exportWav": "ExportAfterPlayback",
+   "abortExport": "AbortExport",
+   "resetAudio": "iOSAudioReset",
+   "version": "Version",
+   "guide": "guide/update",
+   "homepage": "https://goto920.github.io/demos/variableplayer/"
+  },
+ "ja": {
+   "title": "KG's 速度/音程可変プレーヤ",
+   "input": "オーディオ・ファイル選択 (ローカル/クラウド)",
+   "speed": "速度(%)",
+   "reset": "リセット",
+   "pitch": "音程(半音.半音の1/100)",
+   "time": "時刻(秒)",
+   "timeNote": "(再生開始位置, A, B設定)",
+   "setA": "設定A",
+   "setB": "設定B",
+   "resetAB": "リセットAB",
+   "volume" : "音量(%)",
+   "volumeNote" : "(書き出し中変更可)",
+   "loadFile": "ファイルを選んでね!",
+   "playOnce": "一回再生",
+   "pause": "一時停止",
+   "rewind": "巻き戻し",
+   "loopAB": "ABループ再生",
+   "stopLoop": "ループ停止",
+   "interval": "間隔(秒)",
+   "exportWav": "再生後書き出し",
+   "abortExport": "書き出し中止",
+   "resetAudio": "iOSオーディオリセット",
+   "version": "版",
+   "guide": "ガイド/更新",
+   "homepage": "https://goto920.github.io/demos/variableplayer/index-jp.html"
+  }
+}
+-e 
+
+--- START OF FILE src/serviceWorker.js ---
+
+// This optional code is used to register a service worker.
+// register() is not called by default.
+
+// This lets the app load faster on subsequent visits in production, and gives
+// it offline capabilities. However, it also means that developers (and users)
+// will only see deployed updates on subsequent visits to a page, after all the
+// existing tabs open on the page have been closed, since previously cached
+// resources are updated in the background.
+
+// To learn more about the benefits of this model and instructions on how to
+// opt-in, read http://bit.ly/CRA-PWA
+
+const isLocalhost = Boolean(
+  window.location.hostname === 'localhost' ||
+    // [::1] is the IPv6 localhost address.
+    window.location.hostname === '[::1]' ||
+    // 127.0.0.1/8 is considered localhost for IPv4.
+    window.location.hostname.match(
+      /^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/
+    )
+);
+
+export function register(config) {
+  if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+    // The URL constructor is available in all browsers that support SW.
+    const publicUrl = new URL(process.env.PUBLIC_URL, window.location.href);
+    if (publicUrl.origin !== window.location.origin) {
+      // Our service worker won't work if PUBLIC_URL is on a different origin
+      // from what our page is served on. This might happen if a CDN is used to
+      // serve assets; see https://github.com/facebook/create-react-app/issues/2374
+      return;
+    }
+
+    window.addEventListener('load', () => {
+      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+
+      if (isLocalhost) {
+        // This is running on localhost. Let's check if a service worker still exists or not.
+        checkValidServiceWorker(swUrl, config);
+
+        // Add some additional logging to localhost, pointing developers to the
+        // service worker/PWA documentation.
+        navigator.serviceWorker.ready.then(() => {
+          console.log(
+            'This web app is being served cache-first by a service ' +
+              'worker. To learn more, visit http://bit.ly/CRA-PWA'
+          );
+        });
+      } else {
+        // Is not localhost. Just register service worker
+        registerValidSW(swUrl, config);
+      }
+    });
+  }
+}
+
+function registerValidSW(swUrl, config) {
+  navigator.serviceWorker
+    .register(swUrl)
+    .then(registration => {
+      registration.onupdatefound = () => {
+        const installingWorker = registration.installing;
+        if (installingWorker == null) {
+          return;
+        }
+        installingWorker.onstatechange = () => {
+          if (installingWorker.state === 'installed') {
+            if (navigator.serviceWorker.controller) {
+              // At this point, the updated precached content has been fetched,
+              // but the previous service worker will still serve the older
+              // content until all client tabs are closed.
+              console.log(
+                'New content is available and will be used when all ' +
+                  'tabs for this page are closed. See http://bit.ly/CRA-PWA.'
+              );
+
+              // Execute callback
+              if (config && config.onUpdate) {
+                config.onUpdate(registration);
+              }
+            } else {
+              // At this point, everything has been precached.
+              // It's the perfect time to display a
+              // "Content is cached for offline use." message.
+              console.log('Content is cached for offline use.');
+
+              // Execute callback
+              if (config && config.onSuccess) {
+                config.onSuccess(registration);
+              }
+            }
+          }
+        };
+      };
+    })
+    .catch(error => {
+      console.error('Error during service worker registration:', error);
+    });
+}
+
+function checkValidServiceWorker(swUrl, config) {
+  // Check if the service worker can be found. If it can't reload the page.
+  fetch(swUrl)
+    .then(response => {
+      // Ensure service worker exists, and that we really are getting a JS file.
+      const contentType = response.headers.get('content-type');
+      if (
+        response.status === 404 ||
+        (contentType != null && contentType.indexOf('javascript') === -1)
+      ) {
+        // No service worker found. Probably a different app. Reload the page.
+        navigator.serviceWorker.ready.then(registration => {
+          registration.unregister().then(() => {
+            window.location.reload();
+          });
+        });
+      } else {
+        // Service worker found. Proceed as normal.
+        registerValidSW(swUrl, config);
+      }
+    })
+    .catch(() => {
+      console.log(
+        'No internet connection found. App is running in offline mode.'
+      );
+    });
+}
+
+export function unregister() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.ready.then(registration => {
+      registration.unregister();
+    });
+  }
+}
+-e 
+
+--- START OF FILE src/index.js ---
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import * as serviceWorker from './serviceWorker';
+
+ReactDOM.render(<App />, document.getElementById('root'));
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: http://bit.ly/CRA-PWA
+// serviceWorker.unregister();
+serviceWorker.register();
